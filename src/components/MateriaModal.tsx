@@ -1,7 +1,9 @@
+import type { CSSProperties } from 'react';
 import { useEffect, useState } from 'react';
 import type { Materia, Slot, Status, Turma } from '../types';
 import { CORES, DIAS_LONGO, STATUS_LABEL, STATUS_ORDER, uid } from '../types';
 import { slotValido } from '../scheduler';
+import { Icon } from './Icon';
 
 interface Props {
   inicial: Materia;
@@ -48,8 +50,11 @@ export function MateriaModal({ inicial, nova, onSalvar, onExcluir, onFechar }: P
         }}
       >
         <header className="modal-topo">
-          <h2>{nova ? 'Nova matéria' : 'Editar matéria'}</h2>
-          <button type="button" className="btn-icone" onClick={onFechar} aria-label="Fechar">×</button>
+          <div className="modal-titulo">
+            <span className="modal-cor" style={{ background: m.cor }} />
+            <h2>{nova ? 'Nova matéria' : 'Editar matéria'}</h2>
+          </div>
+          <button type="button" className="btn-icone" onClick={onFechar} aria-label="Fechar"><Icon name="x" size={18} /></button>
         </header>
 
         <div className="campos">
@@ -74,6 +79,7 @@ export function MateriaModal({ inicial, nova, onSalvar, onExcluir, onFechar }: P
           </label>
         </div>
 
+        <div className="cores-rotulo">Cor</div>
         <div className="cores" role="radiogroup" aria-label="Cor">
           {CORES.map((c) => (
             <button type="button" key={c} role="radio" aria-checked={m.cor === c} aria-label={c}
@@ -84,17 +90,17 @@ export function MateriaModal({ inicial, nova, onSalvar, onExcluir, onFechar }: P
 
         <div className="turmas">
           <div className="turmas-topo">
-            <h3>Turmas</h3>
-            <button type="button" className="btn" onClick={addTurma}>+ Turma</button>
+            <h3>Turmas <small>{m.turmas.length}</small></h3>
+            <button type="button" className="btn" onClick={addTurma}><Icon name="plus" size={14} /> Turma</button>
           </div>
           {m.turmas.length === 0 && <p className="vazio">Adicione as turmas com os horários pra matéria entrar na grade.</p>}
           {m.turmas.map((t) => (
-            <div className="turma" key={t.id}>
+            <div className="turma" key={t.id} style={{ '--cor': m.cor } as CSSProperties}>
               <div className="turma-linha">
                 <input className="turma-nome" value={t.nome} onChange={(e) => setTurma(t.id, { nome: e.target.value })} aria-label="Nome da turma" />
                 <input value={t.professor ?? ''} placeholder="Professor (opcional)" onChange={(e) => setTurma(t.id, { professor: e.target.value })} aria-label="Professor" />
                 <button type="button" className="btn-icone" aria-label="Remover turma"
-                  onClick={() => setM({ ...m, turmas: m.turmas.filter((x) => x.id !== t.id) })}>🗑</button>
+                  onClick={() => setM({ ...m, turmas: m.turmas.filter((x) => x.id !== t.id) })}><Icon name="trash" /></button>
               </div>
               {t.slots.map((s, i) => (
                 <div className={`slot ${slotValido(s) ? '' : 'erro'}`} key={i}>
@@ -102,15 +108,15 @@ export function MateriaModal({ inicial, nova, onSalvar, onExcluir, onFechar }: P
                     {DIAS_LONGO.map((d, j) => <option key={d} value={j}>{d}</option>)}
                   </select>
                   <input type="time" value={s.inicio} onChange={(e) => setSlot(t, i, { inicio: e.target.value })} aria-label="Início" />
-                  <span>às</span>
+                  <span className="seta">→</span>
                   <input type="time" value={s.fim} onChange={(e) => setSlot(t, i, { fim: e.target.value })} aria-label="Fim" />
                   <button type="button" className="btn-icone" aria-label="Remover horário"
-                    onClick={() => setTurma(t.id, { slots: t.slots.filter((_, j) => j !== i) })}>−</button>
+                    onClick={() => setTurma(t.id, { slots: t.slots.filter((_, j) => j !== i) })}><Icon name="x" size={14} /></button>
                 </div>
               ))}
               <button type="button" className="btn-link"
                 onClick={() => setTurma(t.id, { slots: [...t.slots, { ...(t.slots[t.slots.length - 1] ?? { dia: 0, inicio: '19:00', fim: '20:40' }) }] })}>
-                + horário
+                <Icon name="plus" size={13} /> horário
               </button>
             </div>
           ))}

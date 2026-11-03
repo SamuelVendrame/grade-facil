@@ -6,6 +6,7 @@ import { exemplo } from './sample';
 import { Kanban } from './components/Kanban';
 import { MateriaModal } from './components/MateriaModal';
 import { Montador } from './components/Montador';
+import { Icon } from './components/Icon';
 
 type Aba = 'quadro' | 'grade';
 
@@ -60,45 +61,68 @@ export default function App() {
     }
   };
 
+  const porStatus = (st: Status) => materias.filter((m) => m.status === st).reduce((t, m) => t + m.creditos, 0);
+  const barras: { st: Status; label: string; cr: number }[] = [
+    { st: 'concluida', label: 'Concluídas', cr: credFeitos },
+    { st: 'cursando', label: 'Cursando', cr: porStatus('cursando') },
+    { st: 'quero', label: 'Próximo semestre', cr: porStatus('quero') },
+    { st: 'pendente', label: 'Pendentes', cr: porStatus('pendente') },
+  ];
+  const nQuero = materias.filter((m) => m.status === 'quero').length;
+
   return (
     <div className="app">
       <header className="topo">
-        <div className="marca">
-          <span className="logo" aria-hidden>▦</span>
-          <div>
-            <h1>Grade Fácil</h1>
-            <p>Planeje o curso e monte sua grade sem choque de horário</p>
+        <div className="topo-inner">
+          <div className="marca">
+            <span className="logo" aria-hidden><Icon name="grid" size={20} /></span>
+            <h1>Grade<span>Fácil</span></h1>
           </div>
-        </div>
-
-        <div className="progresso" title={`${credFeitos} de ${credTotal} créditos concluídos`}>
-          <div className="progresso-texto">
-            <span>{credFeitos}/{credTotal} créditos · {concluidas.length}/{materias.length} matérias</span>
-            <b>{pct}%</b>
+          <div className="acoes">
+            <button className="btn fantasma" onClick={() => exportarJSON(estado)} title="Exportar JSON"><Icon name="download" /><span>Exportar</span></button>
+            <button className="btn fantasma" onClick={() => arquivoRef.current?.click()} title="Importar JSON"><Icon name="upload" /><span>Importar</span></button>
+            <button className="btn fantasma" title="Apagar tudo"
+              onClick={() => confirm('Apagar tudo e começar do zero?') && setEstado({ materias: [], fixadas: {} })}>
+              <Icon name="reset" /><span>Limpar</span>
+            </button>
+            <input ref={arquivoRef} type="file" accept="application/json" hidden
+              onChange={(e) => { importar(e.target.files?.[0]); e.target.value = ''; }} />
           </div>
-          <div className="progresso-barra"><div style={{ width: `${pct}%` }} /></div>
-        </div>
-
-        <div className="acoes">
-          <button className="btn" onClick={() => exportarJSON(estado)}>Exportar</button>
-          <button className="btn" onClick={() => arquivoRef.current?.click()}>Importar</button>
-          <button className="btn" onClick={() => confirm('Apagar tudo e começar do zero?') && setEstado({ materias: [], fixadas: {} })}>
-            Limpar
-          </button>
-          <input ref={arquivoRef} type="file" accept="application/json" hidden
-            onChange={(e) => { importar(e.target.files?.[0]); e.target.value = ''; }} />
         </div>
       </header>
 
-      <nav className="abas" role="tablist">
-        <button role="tab" aria-selected={aba === 'quadro'} className={aba === 'quadro' ? 'ativa' : ''} onClick={() => setAba('quadro')}>
-          Quadro de matérias
-        </button>
-        <button role="tab" aria-selected={aba === 'grade'} className={aba === 'grade' ? 'ativa' : ''} onClick={() => setAba('grade')}>
-          Montar grade
-          <span className="badge">{materias.filter((m) => m.status === 'quero').length}</span>
-        </button>
-      </nav>
+      <div className="conteudo">
+        <section className="hero">
+          <div className="hero-texto">
+            <h2>Monte sua grade sem choque de horário</h2>
+            <p>Organize as matérias do curso no quadro, marque o que quer cursar e deixe o app testar todas as combinações de turmas por você.</p>
+          </div>
+          <div className="progresso-card">
+            <div className="progresso-topo">
+              <div>
+                <small>Progresso do curso</small>
+                <strong>{pct}%</strong>
+              </div>
+              <span>{credFeitos} de {credTotal} créditos<br />{concluidas.length} de {materias.length} matérias</span>
+            </div>
+            <div className="barra-empilhada" role="img" aria-label={`${pct}% concluído`}>
+              {barras.map((b) => b.cr > 0 && <div key={b.st} className={`st-${b.st}`} style={{ flexGrow: b.cr }} title={`${b.label}: ${b.cr} cr`} />)}
+            </div>
+            <ul className="barra-legenda">
+              {barras.map((b) => <li key={b.st} className={`st-${b.st}`}><i />{b.label} <b>{b.cr}</b></li>)}
+            </ul>
+          </div>
+        </section>
+
+        <nav className="abas" role="tablist">
+          <button role="tab" aria-selected={aba === 'quadro'} className={aba === 'quadro' ? 'ativa' : ''} onClick={() => setAba('quadro')}>
+            <Icon name="board" /> Quadro de matérias
+          </button>
+          <button role="tab" aria-selected={aba === 'grade'} className={aba === 'grade' ? 'ativa' : ''} onClick={() => setAba('grade')}>
+            <Icon name="calendar" /> Montar grade
+            {nQuero > 0 && <span className="badge">{nQuero}</span>}
+          </button>
+        </nav>
 
       <main>
         {aba === 'quadro' ? (
@@ -125,9 +149,10 @@ export default function App() {
       </main>
 
       <footer className="rodape">
-        Seus dados ficam só no seu navegador. ·{' '}
-        <a href="https://github.com/SamuelVendrame/grade-facil" target="_blank" rel="noreferrer">Código no GitHub</a>
+        <span>🔒 Seus dados ficam só no seu navegador.</span>
+        <a href="https://github.com/SamuelVendrame/grade-facil" target="_blank" rel="noreferrer"><Icon name="github" size={14} /> Código no GitHub</a>
       </footer>
+      </div>
 
       {editando && (
         <MateriaModal

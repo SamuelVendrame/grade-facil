@@ -40,7 +40,7 @@ O núcleo fica em [`src/scheduler.ts`](src/scheduler.ts): um **backtracking** qu
 
 - [React 19](https://react.dev) + TypeScript + [Vite](https://vite.dev)
 - [dnd-kit](https://dndkit.com) para o drag-and-drop (mouse, toque e teclado)
-- [jsPDF](https://github.com/parallax/jsPDF) + [html2canvas](https://html2canvas.hertzen.com) para o PDF, carregados sob demanda
+- [jsPDF](https://github.com/parallax/jsPDF) + [html-to-image](https://github.com/bubkoo/html-to-image) para o PDF, carregados sob demanda
 - CSS puro com variáveis (sem framework de UI)
 - Deploy contínuo no GitHub Pages via GitHub Actions
 
