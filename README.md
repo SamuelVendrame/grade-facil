@@ -53,7 +53,7 @@ npm install
 npm run dev
 ```
 
-Build de produção: `npm run build` (gera a pasta `dist/`).
+Testes do algoritmo: `npm test` · Build de produção: `npm run build` (gera a pasta `dist/`).
 
 ## Estrutura
 
@@ -61,6 +61,7 @@ Build de produção: `npm run build` (gera a pasta `dist/`).
 src/
 ├── App.tsx               # estado global, abas, import/export
 ├── scheduler.ts          # algoritmo de geração das grades
+├── scheduler.test.ts     # testes do algoritmo (Vitest)
 ├── pdf.ts                # exportação para PDF
 ├── storage.ts            # localStorage + JSON
 ├── sample.ts             # dados de exemplo
