@@ -5,7 +5,6 @@ import { DIAS, DIAS_LONGO } from '../types';
 import { gerarGrades } from '../scheduler';
 import { exportarPDF } from '../pdf';
 import { Grade } from './Grade';
-import { Icon } from './Icon';
 
 interface Props {
   materias: Materia[];
@@ -14,7 +13,7 @@ interface Props {
   onIrKanban: () => void;
 }
 
-const fmtJanela = (min: number) => (min === 0 ? 'Sem janelas' : `${Math.floor(min / 60)}h${String(min % 60).padStart(2, '0')} de janela`);
+const fmtJanela = (min: number) => (min === 0 ? 'sem janelas' : `${Math.floor(min / 60)}h${String(min % 60).padStart(2, '0')} de janela`);
 
 export function Montador({ materias, fixadas, onFixar, onIrKanban }: Props) {
   const queridas = useMemo(() => materias.filter((m) => m.status === 'quero'), [materias]);
@@ -40,10 +39,9 @@ export function Montador({ materias, fixadas, onFixar, onIrKanban }: Props) {
   if (queridas.length === 0) {
     return (
       <div className="estado-vazio">
-        <div className="estado-icone"><Icon name="grid" size={28} /></div>
-        <h2>Nenhuma matéria em “Quero cursar”</h2>
-        <p>Arraste pra coluna <b>Quero cursar</b> as matérias que você pretende fazer no próximo semestre e volte aqui.</p>
-        <button className="btn primario" onClick={onIrKanban}><Icon name="board" /> Ir para o quadro</button>
+        <h2>Nada em “Quero cursar” ainda.</h2>
+        <p>Arraste para essa coluna as matérias que você pretende fazer no próximo semestre e volte aqui.</p>
+        <button className="btn" onClick={onIrKanban}>← Voltar ao quadro</button>
       </div>
     );
   }
@@ -55,15 +53,13 @@ export function Montador({ materias, fixadas, onFixar, onIrKanban }: Props) {
   };
 
   const diasUsados = new Set(opcao?.escolhas.flatMap((e) => e.turma.slots.map((s) => s.dia)) ?? []);
+  const total = `${String(opcoes.length).padStart(2, '0')}${opcoes.length >= 300 ? '+' : ''}`;
 
   return (
     <div className="montador">
       <aside className="painel">
-        <div className="painel-topo">
-          <h3>Matérias escolhidas</h3>
-          <span className="pill">{queridas.length}</span>
-        </div>
-        <p className="dica">Fixe uma turma pra travar ela em todas as opções.</p>
+        <h3 className="rotulo">Matérias escolhidas <span>{String(queridas.length).padStart(2, '0')}</span></h3>
+        <p className="dica">Fixe uma turma para travá-la em todas as opções.</p>
         <ul className="lista-fixar">
           {queridas.map((m) => {
             const fixa = !!fixadas[m.id];
@@ -73,8 +69,8 @@ export function Montador({ materias, fixadas, onFixar, onIrKanban }: Props) {
                 <div className="fixar-nome">
                   <i />
                   <span>{m.nome}</span>
-                  {fixa && <span className="tag-fixa"><Icon name="pin" size={12} /></span>}
-                  {fora && <span className="tag-fora">fora</span>}
+                  {fixa && <em>fixada</em>}
+                  {fora && <em className="fora-tag">fora</em>}
                 </div>
                 <select value={fixadas[m.id] ?? ''} onChange={(e) => onFixar(m.id, e.target.value || null)}
                   disabled={m.turmas.length === 0} aria-label={`Turma de ${m.nome}`}>
@@ -90,46 +86,56 @@ export function Montador({ materias, fixadas, onFixar, onIrKanban }: Props) {
       <section className="resultado">
         {!opcao ? (
           <div className="estado-vazio">
-            <div className="estado-icone"><Icon name="alert" size={28} /></div>
-            <h2>Nenhuma combinação possível</h2>
+            <h2>Nenhuma combinação possível.</h2>
             <p>Confira se as matérias têm turmas com horários válidos, ou solte alguma turma fixada.</p>
           </div>
         ) : (
           <>
             <div className="barra-opcoes">
               <div className="navegador">
-                <button className="btn-icone grande" onClick={() => setIdx(i - 1)} disabled={i === 0} aria-label="Opção anterior"><Icon name="left" /></button>
+                <button className="btn-seta" onClick={() => setIdx(i - 1)} disabled={i === 0} aria-label="Opção anterior">←</button>
                 <div className="opcao-num">
-                  <small>Opção</small>
-                  <strong>{i + 1}<span>/{opcoes.length}{opcoes.length >= 300 ? '+' : ''}</span></strong>
+                  <span className="rotulo">Opção</span>
+                  <strong>{String(i + 1).padStart(2, '0')}<span> / {total}</span></strong>
                 </div>
-                <button className="btn-icone grande" onClick={() => setIdx(i + 1)} disabled={i >= opcoes.length - 1} aria-label="Próxima opção"><Icon name="right" /></button>
+                <button className="btn-seta" onClick={() => setIdx(i + 1)} disabled={i >= opcoes.length - 1} aria-label="Próxima opção">→</button>
               </div>
 
-              <div className="metricas">
-                <div className="dias-usados" aria-label={`${opcao.dias} dias com aula`}>
-                  {DIAS.map((d, di) => <span key={d} title={`${DIAS_LONGO[di]}: ${diasUsados.has(di) ? 'com aula' : 'livre'}`} className={diasUsados.has(di) ? 'on' : ''}>{d[0]}</span>)}
+              <dl className="metricas">
+                <div>
+                  <dt className="rotulo">Dias</dt>
+                  <dd className="dias-usados" aria-label={`${opcao.dias} dias com aula`}>
+                    {DIAS.map((d, di) => (
+                      <span key={d} title={`${DIAS_LONGO[di]}: ${diasUsados.has(di) ? 'com aula' : 'livre'}`}
+                        className={diasUsados.has(di) ? 'on' : ''}>{d.slice(0, 3)}</span>
+                    ))}
+                  </dd>
                 </div>
-                <span className="chip"><Icon name="calendar" size={13} />{opcao.dias} {opcao.dias === 1 ? 'dia' : 'dias'}</span>
-                <span className={`chip ${opcao.janelas === 0 ? 'bom' : ''}`}><Icon name="coffee" size={13} />{fmtJanela(opcao.janelas)}</span>
-                {i === 0 && opcoes.length > 1 && <span className="chip destaque">★ Melhor opção</span>}
-              </div>
+                <div>
+                  <dt className="rotulo">Janelas</dt>
+                  <dd>{fmtJanela(opcao.janelas)}</dd>
+                </div>
+                <div>
+                  <dt className="rotulo">Créditos</dt>
+                  <dd>{opcao.creditos}</dd>
+                </div>
+                {i === 0 && opcoes.length > 1 && <span className="selo">melhor opção</span>}
+              </dl>
 
               <button className="btn primario" onClick={baixar} disabled={baixando}>
-                <Icon name="download" /> {baixando ? 'Gerando…' : 'Baixar PDF'}
+                {baixando ? 'Gerando…' : 'Baixar PDF'}
               </button>
             </div>
 
             {opcao.fora.length > 0 && (
               <div className="alerta">
-                <Icon name="alert" />
-                <span>Não dá pra encaixar tudo. Ficaram de fora por choque de horário: <b>{opcao.fora.map((m) => m.nome).join(', ')}</b></span>
+                <b>Não cabe tudo.</b> Ficaram de fora por choque de horário: {opcao.fora.map((m) => m.nome).join(', ')}.
               </div>
             )}
 
             <Grade ref={gradeRef} escolhas={opcao.escolhas} titulo="Minha grade"
-              subtitulo={`${opcao.dias} ${opcao.dias === 1 ? 'dia' : 'dias'} na faculdade · ${fmtJanela(opcao.janelas).toLowerCase()}`} />
-            <p className="dica-teclado">Use <kbd>←</kbd> <kbd>→</kbd> para navegar entre as opções</p>
+              subtitulo={`${opcao.dias} ${opcao.dias === 1 ? 'dia' : 'dias'} na faculdade · ${fmtJanela(opcao.janelas)}`} />
+            <p className="dica-teclado">Use <kbd>←</kbd> <kbd>→</kbd> para navegar entre as opções.</p>
           </>
         )}
       </section>

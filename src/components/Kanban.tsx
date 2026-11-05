@@ -7,7 +7,6 @@ import {
 import { useState } from 'react';
 import type { Materia, Status } from '../types';
 import { STATUS_LABEL, STATUS_ORDER } from '../types';
-import { Icon } from './Icon';
 
 interface Props {
   materias: Materia[];
@@ -17,10 +16,10 @@ interface Props {
 }
 
 const DICA: Record<Status, string> = {
-  pendente: 'O que ainda falta no curso',
-  quero: 'Entra no montador de grade',
-  cursando: 'Semestre atual',
-  concluida: 'Já foi!',
+  pendente: 'o que ainda falta no curso',
+  quero: 'vai para o montador de grade',
+  cursando: 'semestre atual',
+  concluida: 'já cursadas',
 };
 
 export function Kanban({ materias, onMover, onEditar, onNova }: Props) {
@@ -58,19 +57,15 @@ function Coluna({ status, materias, onEditar, onNova }: {
   return (
     <section ref={setNodeRef} className={`coluna st-${status} ${isOver ? 'sobre' : ''}`}>
       <header className="coluna-topo">
-        <div className="coluna-titulo">
-          <span className="ponto" />
-          <h3>{STATUS_LABEL[status]}</h3>
-          <span className="pill">{materias.length}</span>
-        </div>
-        <span className="coluna-cr">{creditos} cr</span>
+        <h3><i />{STATUS_LABEL[status]}</h3>
+        <span className="coluna-meta">{String(materias.length).padStart(2, '0')} · {creditos} cr</span>
       </header>
       <p className="coluna-dica">{DICA[status]}</p>
       <div className="cards">
         {materias.map((m) => <Card key={m.id} m={m} onEditar={() => onEditar(m)} />)}
-        {materias.length === 0 && <div className="dropzone">Solte uma matéria aqui</div>}
+        {materias.length === 0 && <div className="dropzone">solte aqui</div>}
       </div>
-      <button className="btn-add" onClick={onNova}><Icon name="plus" size={14} /> Adicionar matéria</button>
+      <button className="btn-add" onClick={onNova}>+ adicionar matéria</button>
     </section>
   );
 }
@@ -94,16 +89,14 @@ function CardConteudo({ m, arrastando }: { m: Materia; arrastando?: boolean }) {
   const semHorario = m.status === 'quero' && m.turmas.length === 0;
   return (
     <div className={`card-conteudo ${arrastando ? 'arrastando' : ''}`} style={{ '--cor': m.cor } as CSSProperties}>
-      <div className="card-topo">
-        {m.codigo && <span className="codigo">{m.codigo}</span>}
-        <span className="grip" aria-hidden>⋮⋮</span>
+      <div className="card-linha">
+        <span className="swatch" />
+        <span className="codigo">{m.codigo ?? '—'}</span>
+        <span className="card-cr">{m.creditos} cr</span>
       </div>
       <strong className="card-nome">{m.nome}</strong>
-      <div className="card-meta">
-        <span><Icon name="book" size={13} />{m.creditos} cr</span>
-        <span><Icon name="users" size={13} />{m.turmas.length} {m.turmas.length === 1 ? 'turma' : 'turmas'}</span>
-      </div>
-      {semHorario && <div className="aviso"><Icon name="alert" size={13} /> Sem turmas: não entra na grade</div>}
+      <span className="card-meta">{m.turmas.length} {m.turmas.length === 1 ? 'turma' : 'turmas'}</span>
+      {semHorario && <span className="aviso">sem turmas · não entra na grade</span>}
     </div>
   );
 }

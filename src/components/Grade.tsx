@@ -36,6 +36,7 @@ export const Grade = forwardRef<HTMLDivElement, Props>(({ escolhas, titulo, subt
           <div className="grade-resumo">
             <span><b>{escolhas.length}</b> matérias</span>
             <span><b>{creditos}</b> créditos</span>
+            <span className="grade-marca">Grade Fácil</span>
           </div>
         </div>
       )}
@@ -49,7 +50,7 @@ export const Grade = forwardRef<HTMLDivElement, Props>(({ escolhas, titulo, subt
           ))}
 
           <div className="grade-horas" style={{ height: altura }}>
-            {horas.map((h) => <span key={h} style={{ top: (h - minH) * PX_POR_HORA }}>{String(h).padStart(2, '0')}h</span>)}
+            {horas.map((h) => <span key={h} style={{ top: (h - minH) * PX_POR_HORA }}>{String(h).padStart(2, '0')}:00</span>)}
           </div>
 
           {dias.map((_, di) => (

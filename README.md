@@ -1,6 +1,6 @@
 <div align="center">
 
-# ▦ Grade Fácil
+# Grade Fácil
 
 **Organize as matérias do curso num kanban e gere automaticamente todas as grades horárias possíveis, sem choque de horário.**
 
@@ -11,30 +11,30 @@
 ![Vitest](https://img.shields.io/badge/testes-Vitest-6e9f18?logo=vitest&logoColor=white)
 [![Licença MIT](https://img.shields.io/badge/licença-MIT-blue)](LICENSE)
 
-### [🔗 Abrir o app](https://samuelvendrame.github.io/grade-facil/)
+**[Abrir o app →](https://samuelvendrame.github.io/grade-facil/)**
 
 <img src="docs/demo.gif" alt="Demonstração: arrastando uma matéria no kanban e gerando as grades" width="860" />
 
 </div>
 
-## 💡 O problema
+## O problema
 
 Toda época de matrícula é a mesma coisa: várias matérias, cada uma com duas ou três turmas em horários diferentes, e você tentando montar na mão, numa planilha, uma combinação sem choque que, se possível, não te faça ir pra faculdade todo dia.
 
 O **Grade Fácil** resolve isso. Você cadastra as turmas uma vez e ele testa **todas as combinações** por você, ranqueando as melhores.
 
-## ✨ Funcionalidades
+## Funcionalidades
 
 | | |
 |---|---|
-| 🗂️ **Kanban do curso** | Arraste as matérias entre *Pendentes*, *Quero cursar*, *Cursando* e *Concluídas*, com o progresso do curso em créditos. |
-| ⚙️ **Montador automático** | Gera todas as combinações de turmas sem conflito a partir do que está em *Quero cursar*. |
-| 🏆 **Ranking inteligente** | As opções vêm ordenadas por **menos dias na faculdade** e **menos janelas** entre aulas. |
-| 📌 **Fixar turma** | Quer muito a turma de um professor? Trave ela e veja só as opções compatíveis. |
-| 🧩 **Encaixe parcial** | Se não couber tudo, mostra as combinações com o **máximo de matérias** e avisa quais ficaram de fora. |
-| 📄 **Exportar PDF** | Baixe a grade em A4 paisagem, pronta pra imprimir ou mandar no grupo da turma. |
-| 🔁 **Importar e exportar JSON** | Compartilhe o cadastro das turmas com os colegas. |
-| 🔒 **Sem login e sem servidor** | Tudo fica no `localStorage` do seu navegador. |
+| **Kanban do curso** | Arraste as matérias entre *Pendentes*, *Quero cursar*, *Cursando* e *Concluídas*, com o progresso do curso em créditos. |
+| **Montador automático** | Gera todas as combinações de turmas sem conflito a partir do que está em *Quero cursar*. |
+| **Ranking das opções** | As opções vêm ordenadas por **menos dias na faculdade** e **menos janelas** entre aulas. |
+| **Fixar turma** | Quer muito a turma de um professor? Trave ela e veja só as opções compatíveis. |
+| **Encaixe parcial** | Se não couber tudo, mostra as combinações com o **máximo de matérias** e avisa quais ficaram de fora. |
+| **Exportar PDF** | Baixe a grade em A4 paisagem, pronta pra imprimir ou mandar no grupo da turma. |
+| **Importar e exportar JSON** | Compartilhe o cadastro das turmas com os colegas. |
+| **Sem login e sem servidor** | Tudo fica no `localStorage` do seu navegador. |
 
 E mais: tema claro e escuro automático, layout responsivo, drag-and-drop com mouse, toque e teclado, e navegação entre opções com <kbd>←</kbd> <kbd>→</kbd>.
 
@@ -43,7 +43,7 @@ E mais: tema claro e escuro automático, layout responsivo, drag-and-drop com mo
   <img src="docs/grade.png" alt="Grade gerada" width="49%" />
 </p>
 
-## 🧠 Como funciona o montador
+## Como funciona o montador
 
 O núcleo fica em [`src/scheduler.ts`](src/scheduler.ts): um **backtracking com poda**.
 
@@ -61,7 +61,7 @@ para cada matéria (as com menos turmas primeiro):
 
 O algoritmo é coberto por testes em [`src/scheduler.test.ts`](src/scheduler.test.ts), que rodam no CI antes de cada deploy.
 
-## 🛠️ Stack
+## Stack
 
 - **[React 19](https://react.dev) + TypeScript + [Vite](https://vite.dev)**
 - **[dnd-kit](https://dndkit.com)**: drag-and-drop acessível
@@ -70,7 +70,7 @@ O algoritmo é coberto por testes em [`src/scheduler.test.ts`](src/scheduler.tes
 - **CSS puro** com design tokens e `color-mix()`, sem framework de UI
 - **GitHub Actions**: lint, testes, build e deploy no GitHub Pages a cada push
 
-## 🚀 Rodando localmente
+## Rodando localmente
 
 ```bash
 git clone https://github.com/SamuelVendrame/grade-facil.git
@@ -86,7 +86,7 @@ npm run dev
 | `npm run lint` | ESLint |
 | `npm run build` | build de produção em `dist/` |
 
-## 📁 Estrutura
+## Estrutura
 
 ```
 src/
@@ -105,13 +105,13 @@ src/
     └── Icon.tsx          # ícones SVG
 ```
 
-## 🗺️ Próximos passos
+## Próximos passos
 
 - [ ] Pré-requisitos entre matérias
 - [ ] Compartilhar o planejamento por link
 - [ ] Exportar a grade para o Google Calendar (`.ics`)
 - [ ] Preferências no ranking (ex.: "sem aula na sexta")
 
-## 📝 Licença
+## Licença
 
 [MIT](LICENSE). Feito por [Samuel Vendrame](https://github.com/SamuelVendrame).

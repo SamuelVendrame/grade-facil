@@ -90,8 +90,8 @@ export function MateriaModal({ inicial, nova, onSalvar, onExcluir, onFechar }: P
 
         <div className="turmas">
           <div className="turmas-topo">
-            <h3>Turmas <small>{m.turmas.length}</small></h3>
-            <button type="button" className="btn" onClick={addTurma}><Icon name="plus" size={14} /> Turma</button>
+            <h3 className="rotulo">Turmas <span>{String(m.turmas.length).padStart(2, '0')}</span></h3>
+            <button type="button" className="btn" onClick={addTurma}>+ Turma</button>
           </div>
           {m.turmas.length === 0 && <p className="vazio">Adicione as turmas com os horários pra matéria entrar na grade.</p>}
           {m.turmas.map((t) => (
@@ -116,7 +116,7 @@ export function MateriaModal({ inicial, nova, onSalvar, onExcluir, onFechar }: P
               ))}
               <button type="button" className="btn-link"
                 onClick={() => setTurma(t.id, { slots: [...t.slots, { ...(t.slots[t.slots.length - 1] ?? { dia: 0, inicio: '19:00', fim: '20:40' }) }] })}>
-                <Icon name="plus" size={13} /> horário
+                + horário
               </button>
             </div>
           ))}

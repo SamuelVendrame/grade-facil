@@ -1,4 +1,11 @@
 import type { Materia } from './types';
+import { CORES, CORES_LEGADAS } from './types';
+
+const migrarCores = (ms: Materia[]): Materia[] =>
+  ms.map((m) => {
+    const i = CORES_LEGADAS.indexOf(m.cor);
+    return i >= 0 ? { ...m, cor: CORES[i] } : m;
+  });
 
 const KEY = 'grade-facil:v1';
 
@@ -13,7 +20,7 @@ export function carregar(): Estado | null {
     if (!raw) return null;
     const data = JSON.parse(raw);
     if (!Array.isArray(data?.materias)) return null;
-    return { materias: data.materias, fixadas: data.fixadas ?? {} };
+    return { materias: migrarCores(data.materias), fixadas: data.fixadas ?? {} };
   } catch {
     return null;
   }
@@ -39,5 +46,5 @@ export function exportarJSON(estado: Estado) {
 export async function importarJSON(file: File): Promise<Estado> {
   const data = JSON.parse(await file.text());
   if (!Array.isArray(data?.materias)) throw new Error('Arquivo inválido');
-  return { materias: data.materias, fixadas: data.fixadas ?? {} };
+  return { materias: migrarCores(data.materias), fixadas: data.fixadas ?? {} };
 }
