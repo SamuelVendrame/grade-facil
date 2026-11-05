@@ -68,15 +68,14 @@ export default function App() {
       <header className="masthead">
         <div className="mast-titulo">
           <h1>Grade Fácil</h1>
-          <span>planejador de matrícula</span>
         </div>
 
         <nav className="abas" role="tablist">
           <button role="tab" aria-selected={aba === 'quadro'} className={aba === 'quadro' ? 'ativa' : ''} onClick={() => setAba('quadro')}>
-            <span className="num">01</span> Quadro
+            Quadro de matérias
           </button>
           <button role="tab" aria-selected={aba === 'grade'} className={aba === 'grade' ? 'ativa' : ''} onClick={() => setAba('grade')}>
-            <span className="num">02</span> Grade
+            Montar grade
             {nQuero > 0 && <span className="contador">{nQuero}</span>}
           </button>
         </nav>
@@ -93,22 +92,19 @@ export default function App() {
       </header>
 
       <section className="status" aria-label="Progresso do curso">
-        <div className="status-num">
-          <strong>{pct}<small>%</small></strong>
-          <span>do curso concluído<br /><b>{credFeitos}</b> de <b>{credTotal}</b> créditos</span>
-        </div>
-        <div className="status-regua">
-          <div className="regua" role="img" aria-label={`${pct}% concluído`}>
-            {ORDEM_BARRA.map((st) => {
-              const cr = credPor(st);
-              return cr > 0 ? <div key={st} className={`seg st-${st}`} style={{ flexGrow: cr }} /> : null;
-            })}
-          </div>
+        <div className="status-topo">
+          <span><b>Progresso do curso:</b> {pct}% · {credFeitos} de {credTotal} créditos</span>
           <ul className="regua-legenda">
             {ORDEM_BARRA.map((st) => (
-              <li key={st} className={`st-${st}`}><i />{STATUS_LABEL[st]} <b>{credPor(st)}</b></li>
+              <li key={st} className={`st-${st}`}><i />{STATUS_LABEL[st]} {credPor(st)}</li>
             ))}
           </ul>
+        </div>
+        <div className="regua" role="img" aria-label={`${pct}% concluído`}>
+          {ORDEM_BARRA.map((st) => {
+            const cr = credPor(st);
+            return cr > 0 ? <div key={st} className={`seg st-${st}`} style={{ flexGrow: cr }} /> : null;
+          })}
         </div>
       </section>
 
@@ -138,7 +134,7 @@ export default function App() {
 
       <footer className="rodape">
         <span>Os dados ficam salvos só neste navegador.</span>
-        <a href="https://github.com/SamuelVendrame/grade-facil" target="_blank" rel="noreferrer">Código-fonte ↗</a>
+        <a href="https://github.com/SamuelVendrame/grade-facil" target="_blank" rel="noreferrer">Código no GitHub</a>
       </footer>
 
       {editando && (

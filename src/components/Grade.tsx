@@ -36,7 +36,6 @@ export const Grade = forwardRef<HTMLDivElement, Props>(({ escolhas, titulo, subt
           <div className="grade-resumo">
             <span><b>{escolhas.length}</b> matérias</span>
             <span><b>{creditos}</b> créditos</span>
-            <span className="grade-marca">Grade Fácil</span>
           </div>
         </div>
       )}

@@ -3,8 +3,11 @@ import { CORES, CORES_LEGADAS } from './types';
 
 const migrarCores = (ms: Materia[]): Materia[] =>
   ms.map((m) => {
-    const i = CORES_LEGADAS.indexOf(m.cor);
-    return i >= 0 ? { ...m, cor: CORES[i] } : m;
+    for (const legado of CORES_LEGADAS) {
+      const i = legado.indexOf(m.cor);
+      if (i >= 0) return { ...m, cor: CORES[i] };
+    }
+    return m;
   });
 
 const KEY = 'grade-facil:v1';

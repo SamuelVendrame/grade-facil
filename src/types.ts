@@ -36,16 +36,15 @@ export const STATUS_ORDER: Status[] = ['pendente', 'quero', 'cursando', 'conclui
 export const DIAS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 export const DIAS_LONGO = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
-/** Tons de tinta, sóbrios, que funcionam em papel claro e no tema escuro. */
 export const CORES = [
-  '#3d5a98', '#b4442c', '#3e7a4f', '#b08a2e', '#6b4f96',
-  '#c0652b', '#2f7a7a', '#a14468', '#5d6470', '#7a8a32',
+  '#0969da', '#cf222e', '#1a7f37', '#9a6700', '#8250df',
+  '#bc4c00', '#1b7c83', '#bf3989', '#57606a', '#4d7c0f',
 ];
 
-/** Paleta antiga, para migrar dados salvos de versões anteriores. */
+/** Paletas de versões anteriores, para migrar dados salvos (mesma ordem). */
 export const CORES_LEGADAS = [
-  '#4f7cff', '#e5534b', '#2da44e', '#d4a72c', '#a371f7',
-  '#f0883e', '#1f9eb7', '#db61a2', '#6e7781', '#57ab5a',
+  ['#4f7cff', '#e5534b', '#2da44e', '#d4a72c', '#a371f7', '#f0883e', '#1f9eb7', '#db61a2', '#6e7781', '#57ab5a'],
+  ['#3d5a98', '#b4442c', '#3e7a4f', '#b08a2e', '#6b4f96', '#c0652b', '#2f7a7a', '#a14468', '#5d6470', '#7a8a32'],
 ];
 
 export const uid = () =>

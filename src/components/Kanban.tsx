@@ -15,13 +15,6 @@ interface Props {
   onNova: (status: Status) => void;
 }
 
-const DICA: Record<Status, string> = {
-  pendente: 'o que ainda falta no curso',
-  quero: 'vai para o montador de grade',
-  cursando: 'semestre atual',
-  concluida: 'já cursadas',
-};
-
 export function Kanban({ materias, onMover, onEditar, onNova }: Props) {
   const [ativa, setAtiva] = useState<Materia | null>(null);
   const sensors = useSensors(
@@ -57,15 +50,14 @@ function Coluna({ status, materias, onEditar, onNova }: {
   return (
     <section ref={setNodeRef} className={`coluna st-${status} ${isOver ? 'sobre' : ''}`}>
       <header className="coluna-topo">
-        <h3><i />{STATUS_LABEL[status]}</h3>
-        <span className="coluna-meta">{String(materias.length).padStart(2, '0')} · {creditos} cr</span>
+        <h3>{STATUS_LABEL[status]} <span className="contagem">{materias.length}</span></h3>
+        <span className="coluna-meta">{creditos} cr</span>
       </header>
-      <p className="coluna-dica">{DICA[status]}</p>
       <div className="cards">
         {materias.map((m) => <Card key={m.id} m={m} onEditar={() => onEditar(m)} />)}
-        {materias.length === 0 && <div className="dropzone">solte aqui</div>}
+        {materias.length === 0 && <div className="dropzone">Arraste matérias para cá</div>}
       </div>
-      <button className="btn-add" onClick={onNova}>+ adicionar matéria</button>
+      <button className="btn-add" onClick={onNova}>+ Adicionar matéria</button>
     </section>
   );
 }
@@ -91,12 +83,12 @@ function CardConteudo({ m, arrastando }: { m: Materia; arrastando?: boolean }) {
     <div className={`card-conteudo ${arrastando ? 'arrastando' : ''}`} style={{ '--cor': m.cor } as CSSProperties}>
       <div className="card-linha">
         <span className="swatch" />
-        <span className="codigo">{m.codigo ?? '—'}</span>
+        {m.codigo && <span className="codigo">{m.codigo}</span>}
         <span className="card-cr">{m.creditos} cr</span>
       </div>
       <strong className="card-nome">{m.nome}</strong>
       <span className="card-meta">{m.turmas.length} {m.turmas.length === 1 ? 'turma' : 'turmas'}</span>
-      {semHorario && <span className="aviso">sem turmas · não entra na grade</span>}
+      {semHorario && <span className="aviso">Sem turmas: não entra na grade</span>}
     </div>
   );
 }

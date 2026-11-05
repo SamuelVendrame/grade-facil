@@ -90,7 +90,7 @@ export function MateriaModal({ inicial, nova, onSalvar, onExcluir, onFechar }: P
 
         <div className="turmas">
           <div className="turmas-topo">
-            <h3 className="rotulo">Turmas <span>{String(m.turmas.length).padStart(2, '0')}</span></h3>
+            <h3>Turmas <span className="contagem">{m.turmas.length}</span></h3>
             <button type="button" className="btn" onClick={addTurma}>+ Turma</button>
           </div>
           {m.turmas.length === 0 && <p className="vazio">Adicione as turmas com os horários pra matéria entrar na grade.</p>}
